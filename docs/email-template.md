@@ -19,9 +19,18 @@ Go here: **https://github.com/Life-Atlas/lpi-developer-kit**
 
 Read the README carefully. Complete as many levels as you can:
 
-- **Level 1** (5 min): Fork the repo, register yourself, submit a Pull Request. **Everyone who completes Level 1 is confirmed for the program.**
-- **Level 2** (45-90 min): Set up the development tools and run the LPI server on your laptop.
-- **Level 3** (2-4 hours): Build your first AI agent that connects to the LPI platform.
+- **Level 1** (5 min): Fork the repo, register yourself, pick your track, submit a Pull Request. **Everyone who completes Level 1 is confirmed for the program.**
+- **Level 2** (30-90 min): Track-specific challenge — run the dev tools + a task matched to your skills.
+- **Level 3** (2-4 hours): Build something real in your track — an agent, a case study, a design, a 3D scene, or a security audit.
+
+**Five tracks to choose from:**
+- Agent Builders (code, AI, data pipelines)
+- Content & Research (writing, case studies, analysis)
+- Design & UX (infographics, dashboards, UI)
+- 3D & Visualization (Unity, Unreal, Three.js)
+- QA & Security (testing, bug hunting, audits)
+
+Pick the track that matches your skills. You can switch later.
 
 Your highest completed level determines your starting team and role — but we value growth over starting point. Someone who starts at Level 1 and improves quickly will be recognized more than someone who stays at Level 3 without progressing.
 
@@ -39,7 +48,7 @@ Your highest completed level determines your starting team and role — but we v
 - **What you build:** AI agents, tools, and modules on the LifeAtlas platform — all on YOUR GitHub, all in your portfolio.
 - **What you learn:** MCP protocol, AI agents, open-source LLMs, explainable AI, edge computing — industry-current skills, not textbook material.
 - **Certificate:** Contributors who complete the program receive a signed internship completion certificate and a letter of recommendation based on actual contributions.
-- **For Gaming / 3D / AR-VR students:** Complete Level 1 and Level 2 as above. Your Level 3 will be a separate brief focused on 3D visualization of digital twins — you'll receive it in Week 1.
+- **Not a coder?** No problem. The Content, Design, and QA tracks don't require programming. Everyone runs the LPI sandbox once (Level 2) to understand the platform, then your Level 3 is in your own domain.
 
 **Questions?** Post in the Teams channel: **#lifeatlas-contributors**
 

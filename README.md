@@ -70,9 +70,18 @@ Add to your `claude_desktop_config.json`:
 
 LifeAtlas is building the world's first edge-native digital twin OS — a platform where AI agents help people understand and optimize their lives using the SMILE methodology (Sustainable Methodology for Impact Lifecycle Enablement).
 
-You'll be working with the LPI — building agents, tools, and applications that plug into this server. Everything you build is a **module**: your own repo, your own code, independently testable, pluggable. Like a Linux kernel module — self-contained and composable.
+This is a **multi-track contributor program**. Not everyone writes code — some people research, design, write, test, or build 3D visualizations. Every track contributes to the same product. Every contribution is real.
 
-**Your goal:** Build your own collection of AI agents and tools that work with the LPI. By the end of this program, you leave with a **backpack** — your personal agent toolkit, on your GitHub, that demonstrates you can build real AI systems on a real platform.
+**Five tracks:**
+- **Agent Builders** — code, AI agents, MCP tools, data pipelines
+- **Content & Research** — case studies, course modules, competitive analysis, grant writing
+- **Design & UX** — UI/UX, infographics, dashboards, brand materials
+- **3D & Visualization** — Unity, Unreal, Three.js, spatial twins, AR/VR
+- **QA & Security** — testing, security audits, bug hunting, accessibility
+
+Pick the track that matches your skills. Details for each track's screening challenge are below. You can switch tracks later — this is a starting point, not a cage.
+
+**Read the full program guide:** [PROGRAM.md](docs/PROGRAM.md) — how sprints work, how tasks get assigned, IP ownership, what you get, what we expect.
 
 This isn't a classroom exercise. This is open-source contribution to a live product.
 
@@ -122,11 +131,9 @@ Complete as many levels as you can. Your highest completed level determines your
 
 **That's it. You're registered.**
 
-### Level 2 — Run the Stack (45-90 minutes, depending on your internet)
+### Level 2 & 3 — Choose Your Track
 
-Two tasks. Both must work.
-
-**Task A — Run the LPI Sandbox:**
+**Everyone runs the LPI sandbox first** (all tracks):
 
 ```bash
 git clone <your-fork>
@@ -136,25 +143,43 @@ npm run build
 npm run test-client
 ```
 
-Capture the output showing all tools pass.
+Capture the output showing all 7 tools pass. Then pick your track:
 
-**Task B — Run a Local LLM:**
+---
 
-1. Install [Ollama](https://ollama.com)
-2. Pull a model that fits your hardware:
-   - **8GB+ RAM:** `ollama pull qwen2.5:1.5b` (recommended, ~1.2GB)
-   - **4-6GB RAM:** `ollama pull smollm:360m` (lighter, still works)
-   - **Low RAM:** `ollama pull smollm:135m` (minimal, runs anywhere)
-3. Test it: `ollama run qwen2.5:1.5b "What is a digital twin in one paragraph?"`
-4. Note: local LLMs run on your CPU and may take 30-90 seconds to respond. This is normal.
+#### Track A: Agent Builders (technical)
 
-**Submit:** Create `submissions/your-name/level2.md` with:
-- Output from the test client (copy-paste the terminal output)
-- Output from your local LLM query
-- The model you chose and why (including your RAM — this helps us understand hardware constraints)
-- 3 sentences: what surprised you about the SMILE methodology?
+**Level 2** (45-90 min): Run the LPI sandbox (above) + install [Ollama](https://ollama.com) and run a local LLM. Submit: test client output + LLM output + 3 sentences on what surprised you about SMILE.
 
-PR title: `level-2: Your Name`
+**Level 3** (2-4 hours): Build an AI agent that connects to the LPI and does something useful. Use any approach: Python, LangGraph, CrewAI, raw API calls. Must query at least 2 LPI tools and cite its sources. Submit as a separate GitHub repo. See `examples/agent.py` for a working starting point.
+
+#### Track B: Content & Research
+
+**Level 2** (30-60 min): Run the LPI sandbox (above). Read the SMILE methodology output from `smile_overview` and at least 2 case studies. Write a 1-page summary: how does SMILE apply to an industry YOU find interesting? (healthcare, manufacturing, energy, agriculture, smart cities, sports — your choice).
+
+**Level 3** (2-4 hours): Find 3 real-world digital twin implementations NOT already in the LPI knowledge base. For each: describe the challenge, the approach, the outcome, and which SMILE phases were applied. Sources must be cited. Submit as a structured document in `submissions/your-name/`.
+
+#### Track C: Design & UX
+
+**Level 2** (30-60 min): Run the LPI sandbox (above). Read the SMILE methodology output. Sketch a visual representation of the 6 SMILE phases that a non-technical person could understand in 30 seconds. Any tool: Figma, Canva, pen and paper (photograph it).
+
+**Level 3** (2-4 hours): Design a dashboard mockup for ONE of: (a) a personal health digital twin showing sleep, nutrition, exercise, and stress, (b) a professional's client management view, or (c) a course landing page for "The Future of People: Digital Twins for Life." Submit as images or a Figma link in `submissions/your-name/`.
+
+#### Track D: 3D & Visualization
+
+**Level 2** (30-60 min): Run the LPI sandbox (above). Read about Reality Emulation (Phase 1). Write a short description of what a 3D "Reality Canvas" would look like for: a hospital, a horse stable, a smart building, or a human body.
+
+**Level 3** (2-4 hours): Build a simple 3D scene (Unity, Unreal, Godot, Three.js, or Blender) showing a digital twin concept. Must have at least one data overlay (temperature, heart rate, occupancy — whatever fits). Export a video walkthrough or a playable build. Submit a link in `submissions/your-name/`.
+
+#### Track E: QA & Security
+
+**Level 2** (30-60 min): Run the LPI sandbox (above). Try to make it fail. Send unexpected inputs, long queries, special characters. Document everything — what broke, what didn't, what error messages you got. Submit as a bug report.
+
+**Level 3** (2-4 hours): Write a security audit report (OWASP-style) of the LPI sandbox server. Check for: injection vectors, information disclosure, denial of service, error handling leaks. Even finding nothing is valuable if your methodology is sound. Submit in `submissions/your-name/`.
+
+---
+
+**Submit all Level 2/3 work as PRs.** Title: `level-2: Your Name` or `level-3: Your Name`
 
 ### Level 3 — Build Your First Agent (2-4 hours)
 
