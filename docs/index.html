@@ -5,50 +5,493 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LPI Developer Kit — Contributor Leaderboard</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0d1117; color: #c9d1d9; padding: 2rem; }
-        h1 { color: #58a6ff; margin-bottom: 0.5rem; }
-        .subtitle { color: #8b949e; margin-bottom: 2rem; }
-        .stats { display: flex; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-        .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1rem 1.5rem; }
-        .stat-number { font-size: 2rem; font-weight: bold; color: #58a6ff; }
-        .stat-label { color: #8b949e; font-size: 0.85rem; }
-        table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; }
-        th { background: #21262d; padding: 0.75rem 1rem; text-align: left; color: #8b949e; font-size: 0.85rem; text-transform: uppercase; }
-        td { padding: 0.75rem 1rem; border-top: 1px solid #21262d; }
-        tr:hover { background: #1c2128; }
-        a { color: #58a6ff; text-decoration: none; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: #0a0e17;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #0a0e17 0%, #1a1f35 50%, #0a0e17 100%);
+            border-bottom: 1px solid rgba(99, 179, 237, 0.1);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #63b3ed, #b794f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero .subtitle {
+            color: #718096;
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-card {
+            background: rgba(26, 32, 53, 0.8);
+            border: 1px solid rgba(99, 179, 237, 0.15);
+            border-radius: 12px;
+            padding: 1.2rem 2rem;
+            min-width: 140px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: rgba(99, 179, 237, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 179, 237, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            background: linear-gradient(135deg, #63b3ed, #b794f4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label { color: #718096; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+
+        .controls {
+            display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;
+        }
+
+        .search-box {
+            flex: 1; min-width: 200px;
+            background: #1a2035;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-box:focus { border-color: #63b3ed; }
+        .search-box::placeholder { color: #4a5568; }
+
+        .filter-btn {
+            background: #1a2035;
+            border: 1px solid #2d3748;
+            border-radius: 8px;
+            padding: 0.7rem 1.2rem;
+            color: #a0aec0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.2s;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            border-color: #63b3ed;
+            color: #63b3ed;
+            background: rgba(99, 179, 237, 0.08);
+        }
+
+        .table-wrapper {
+            background: rgba(26, 32, 53, 0.6);
+            border: 1px solid rgba(99, 179, 237, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+
+        th {
+            background: rgba(26, 32, 53, 0.9);
+            padding: 0.9rem 1.2rem;
+            text-align: left;
+            color: #718096;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        td {
+            padding: 0.8rem 1.2rem;
+            border-top: 1px solid rgba(45, 55, 72, 0.5);
+            font-size: 0.9rem;
+        }
+
+        tr { transition: background 0.15s; }
+        tr:hover { background: rgba(99, 179, 237, 0.04); }
+        tr.top-3 td:first-child { font-weight: 700; }
+
+        .rank-1 { color: #ffd700; }
+        .rank-2 { color: #c0c0c0; }
+        .rank-3 { color: #cd7f32; }
+
+        .level-badge {
+            display: inline-block;
+            padding: 0.2rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .level-1 { background: rgba(72, 187, 120, 0.15); color: #68d391; border: 1px solid rgba(72, 187, 120, 0.3); }
+        .level-2 { background: rgba(99, 179, 237, 0.15); color: #63b3ed; border: 1px solid rgba(99, 179, 237, 0.3); }
+        .level-3 { background: rgba(183, 148, 244, 0.15); color: #b794f4; border: 1px solid rgba(183, 148, 244, 0.3); }
+
+        .score-bar {
+            display: inline-block;
+            height: 6px;
+            border-radius: 3px;
+            background: #2d3748;
+            width: 80px;
+            position: relative;
+            vertical-align: middle;
+            margin-right: 0.5rem;
+        }
+        .score-bar .fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #63b3ed, #b794f4);
+            transition: width 0.5s ease;
+        }
+
+        .score-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+
+        .skills-tag {
+            display: inline-block;
+            background: rgba(45, 55, 72, 0.8);
+            border-radius: 4px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.7rem;
+            color: #a0aec0;
+            margin: 0.1rem;
+        }
+
+        a { color: #63b3ed; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        .footer { margin-top: 2rem; color: #484f58; font-size: 0.8rem; }
+
+        .mock-badge {
+            display: inline-block;
+            background: rgba(237, 137, 54, 0.15);
+            color: #ed8936;
+            border: 1px solid rgba(237, 137, 54, 0.3);
+            border-radius: 4px;
+            padding: 0.1rem 0.5rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-left: 0.5rem;
+        }
+
+        .timeline {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 2rem;
+            background: #1a2035;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2d3748;
+        }
+
+        .timeline-btn {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            background: transparent;
+            border: none;
+            color: #718096;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            border-right: 1px solid #2d3748;
+        }
+        .timeline-btn:last-child { border-right: none; }
+        .timeline-btn:hover { background: rgba(99, 179, 237, 0.05); color: #a0aec0; }
+        .timeline-btn.active {
+            background: rgba(99, 179, 237, 0.1);
+            color: #63b3ed;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #4a5568;
+            font-size: 0.8rem;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #4a5568;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: fadeIn 0.4s ease forwards; }
     </style>
 </head>
 <body>
-    <h1>LPI Developer Kit — Leaderboard</h1>
-    <p class="subtitle">LifeAtlas Contributor Program | Auto-updated on every merge</p>
 
-    <div class="stats">
-        <div class="stat"><div class="stat-number">0</div><div class="stat-label">Contributors</div></div>
-        <div class="stat"><div class="stat-number">0</div><div class="stat-label">Level 1 (Registered)</div></div>
-        <div class="stat"><div class="stat-number">0</div><div class="stat-label">Level 2 (Stack Running)</div></div>
-        <div class="stat"><div class="stat-number">0</div><div class="stat-label">Level 3 (Agent Built)</div></div>
+<div class="hero">
+    <h1>LPI Developer Kit</h1>
+    <p class="subtitle">LifeAtlas Contributor Program — Live Leaderboard <span class="mock-badge">mock data</span></p>
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="stat-total">0</div><div class="stat-label">Contributors</div></div>
+        <div class="stat-card"><div class="stat-number" id="stat-l1">0</div><div class="stat-label">Level 1</div></div>
+        <div class="stat-card"><div class="stat-number" id="stat-l2">0</div><div class="stat-label">Level 2</div></div>
+        <div class="stat-card"><div class="stat-number" id="stat-l3">0</div><div class="stat-label">Level 3</div></div>
+        <div class="stat-card"><div class="stat-number" id="stat-agents">0</div><div class="stat-label">Agents Built</div></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="timeline">
+        <button class="timeline-btn active" onclick="setTimeline('day1')">Day 1</button>
+        <button class="timeline-btn" onclick="setTimeline('day3')">Day 3</button>
+        <button class="timeline-btn" onclick="setTimeline('day7')">Day 7</button>
+        <button class="timeline-btn" onclick="setTimeline('week2')">Week 2</button>
+        <button class="timeline-btn" onclick="setTimeline('week4')">Week 4</button>
+        <button class="timeline-btn" onclick="setTimeline('month2')">Month 2</button>
     </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>GitHub</th>
-                <th>Level</th>
-                <th>Skills</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <div class="controls">
+        <input type="text" class="search-box" placeholder="Search by name, skill, or interest..." oninput="filterTable(this.value)">
+        <button class="filter-btn" onclick="filterLevel('all')">All</button>
+        <button class="filter-btn" onclick="filterLevel(3)">Level 3</button>
+        <button class="filter-btn" onclick="filterLevel(2)">Level 2</button>
+        <button class="filter-btn" onclick="filterLevel(1)">Level 1</button>
+    </div>
 
-    <p class="footer">
-        🟢 Level 1 (Registered) | 🔵 Level 2 (Stack Running) | 🟣 Level 3 (Agent Built)<br>
-        Generated automatically from <a href="https://github.com/Life-Atlas/lpi-developer-kit">Life-Atlas/lpi-developer-kit</a>
-    </p>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>GitHub</th>
+                    <th>Level</th>
+                    <th>Score</th>
+                    <th>Skills</th>
+                    <th>Team</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body"></tbody>
+        </table>
+    </div>
+</div>
+
+<div class="footer">
+    Auto-updated on every merge to <a href="https://github.com/Life-Atlas/lpi-developer-kit">Life-Atlas/lpi-developer-kit</a><br>
+    Built with the LifeAtlas Agent Fabric
+</div>
+
+<script>
+const MOCK_DATA = {
+    day1: [
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 1, score: 0, skills: ["python","tensorflow","fastapi","RAG"], interests: ["agents"], team: "—", my_twin: "Track my caffeine intake vs productivity" },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 1, score: 0, skills: ["python","tensorflow","AWS"], interests: ["healthcare"], team: "—", my_twin: "Monitor air quality impact on my asthma" },
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 1, score: 0, skills: ["fastapi","langchain","docker"], interests: ["agents","security"], team: "—", my_twin: "Correlate screen time with sleep quality" },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 1, score: 0, skills: ["react","nextjs","openai"], interests: ["NLP","3D"], team: "—", my_twin: "Track social interactions vs mood patterns" },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 1, score: 0, skills: ["fastapi","supabase","pytorch"], interests: ["agents","edge"], team: "—", my_twin: "Monitor prayer times and focus correlation" },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 1, score: 0, skills: ["c++","java","DSA"], interests: ["security"], team: "—", my_twin: "Track coding hours vs bug introduction rate" },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 1, score: 0, skills: ["fastapi","supabase","XAI"], interests: ["agents","healthcare"], team: "—", my_twin: "Monitor stress biomarkers during exam season" },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 1, score: 0, skills: ["python","NLP","streamlit"], interests: ["NLP"], team: "—", my_twin: "Track reading habits vs knowledge retention" },
+        { name: "Anam Singh", github: "anam-singh", level: 1, score: 0, skills: ["fastapi","YOLOv8","streamlit"], interests: ["agents","3D"], team: "—", my_twin: "Monitor posture during long coding sessions" },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 1, score: 0, skills: ["react","arduino","REST"], interests: ["digital-twin","IoT"], team: "—", my_twin: "Build a twin of my home energy consumption" },
+    ],
+    day3: [
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 2, score: 4, skills: ["python","tensorflow","fastapi","RAG"], interests: ["agents"], team: "—" },
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 2, score: 5, skills: ["fastapi","langchain","docker"], interests: ["agents","security"], team: "—" },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 2, score: 4, skills: ["fastapi","supabase","XAI"], interests: ["agents","healthcare"], team: "—" },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 2, score: 3, skills: ["fastapi","supabase","pytorch"], interests: ["agents","edge"], team: "—" },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 2, score: 4, skills: ["react","nextjs","openai"], interests: ["NLP","3D"], team: "—" },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 2, score: 3, skills: ["python","tensorflow","AWS"], interests: ["healthcare"], team: "—" },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 2, score: 3, skills: ["react","arduino","REST"], interests: ["digital-twin","IoT"], team: "—" },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 1, score: 0, skills: ["c++","java","DSA"], interests: ["security"], team: "—" },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 1, score: 0, skills: ["python","NLP","streamlit"], interests: ["NLP"], team: "—" },
+        { name: "Anam Singh", github: "anam-singh", level: 1, score: 0, skills: ["fastapi","YOLOv8","streamlit"], interests: ["agents","3D"], team: "—" },
+        { name: "Priya Sharma", github: "priya-dev", level: 1, score: 0, skills: ["python","pandas","flask"], interests: ["healthcare"], team: "—" },
+        { name: "Harshit Kumar", github: "harshit-k", level: 1, score: 0, skills: ["react","javascript","node"], interests: ["agents"], team: "—" },
+        { name: "Deepanshu", github: "deepanshu99", level: 1, score: 0, skills: ["python","sql","powerbi"], interests: ["data"], team: "—" },
+    ],
+    day7: [
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 3, score: 9, skills: ["fastapi","langchain","docker"], interests: ["agents","security"], team: "—" },
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 3, score: 8, skills: ["python","tensorflow","fastapi","RAG"], interests: ["agents"], team: "—" },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 3, score: 8, skills: ["fastapi","supabase","XAI"], interests: ["agents","healthcare"], team: "—" },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 3, score: 7, skills: ["fastapi","supabase","pytorch"], interests: ["agents","edge"], team: "—" },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 3, score: 7, skills: ["react","nextjs","openai"], interests: ["NLP","3D"], team: "—" },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 3, score: 6, skills: ["react","arduino","REST"], interests: ["digital-twin","IoT"], team: "—" },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 2, score: 4, skills: ["python","tensorflow","AWS"], interests: ["healthcare"], team: "—" },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 2, score: 3, skills: ["c++","java","DSA"], interests: ["security"], team: "—" },
+        { name: "Anam Singh", github: "anam-singh", level: 2, score: 3, skills: ["fastapi","YOLOv8","streamlit"], interests: ["agents","3D"], team: "—" },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 2, score: 3, skills: ["python","NLP","streamlit"], interests: ["NLP"], team: "—" },
+        { name: "Priya Sharma", github: "priya-dev", level: 2, score: 2, skills: ["python","pandas","flask"], interests: ["healthcare"], team: "—" },
+        { name: "Harshit Kumar", github: "harshit-k", level: 1, score: 0, skills: ["react","javascript","node"], interests: ["agents"], team: "—" },
+        { name: "Deepanshu", github: "deepanshu99", level: 1, score: 0, skills: ["python","sql","powerbi"], interests: ["data"], team: "—" },
+        { name: "Misha Arora", github: "misha-a", level: 1, score: 0, skills: ["python","pandas","R"], interests: ["data"], team: "—" },
+        { name: "Joydeep Nandi", github: "joydeep-n", level: 1, score: 0, skills: ["python","pytorch","CV"], interests: ["3D"], team: "—" },
+    ],
+    week2: [
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 3, score: 11, skills: ["fastapi","langchain","docker"], interests: ["agents","security"], team: "Agent Builders" },
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 3, score: 10, skills: ["python","tensorflow","fastapi","RAG"], interests: ["agents"], team: "Agent Builders" },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 3, score: 9, skills: ["fastapi","supabase","XAI"], interests: ["agents","healthcare"], team: "Agent Builders" },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 3, score: 8, skills: ["fastapi","supabase","pytorch"], interests: ["agents","edge"], team: "AI/ML Pipeline" },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 3, score: 8, skills: ["react","nextjs","openai"], interests: ["NLP","3D"], team: "3D & Visualization" },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 3, score: 7, skills: ["react","arduino","REST"], interests: ["digital-twin","IoT"], team: "Agent Builders" },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 3, score: 6, skills: ["c++","java","DSA"], interests: ["security"], team: "QA & Security" },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 3, score: 6, skills: ["python","tensorflow","AWS"], interests: ["healthcare"], team: "AI/ML Pipeline" },
+        { name: "Anam Singh", github: "anam-singh", level: 2, score: 4, skills: ["fastapi","YOLOv8","streamlit"], interests: ["agents","3D"], team: "Data & Knowledge" },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 2, score: 4, skills: ["python","NLP","streamlit"], interests: ["NLP"], team: "Research & Content" },
+        { name: "Priya Sharma", github: "priya-dev", level: 2, score: 3, skills: ["python","pandas","flask"], interests: ["healthcare"], team: "Research & Content" },
+        { name: "Deepanshu", github: "deepanshu99", level: 2, score: 3, skills: ["python","sql","powerbi"], interests: ["data"], team: "Data & Knowledge" },
+        { name: "Misha Arora", github: "misha-a", level: 2, score: 2, skills: ["python","pandas","R"], interests: ["data"], team: "Data & Knowledge" },
+        { name: "Harshit Kumar", github: "harshit-k", level: 1, score: 0, skills: ["react","javascript","node"], interests: ["agents"], team: "Research & Content" },
+        { name: "Joydeep Nandi", github: "joydeep-n", level: 1, score: 0, skills: ["python","pytorch","CV"], interests: ["3D"], team: "3D & Visualization" },
+    ],
+    week4: [
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 3, score: 14, skills: ["fastapi","langchain","docker","langgraph"], interests: ["agents","security"], team: "Agent Builders", agents: 3 },
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 3, score: 13, skills: ["python","tensorflow","fastapi","RAG"], interests: ["agents"], team: "Agent Builders", agents: 2 },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 3, score: 12, skills: ["fastapi","supabase","XAI","MCP"], interests: ["agents","healthcare"], team: "Agent Builders", agents: 2 },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 3, score: 11, skills: ["c++","java","security","pentest"], interests: ["security"], team: "QA & Security", agents: 1 },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 3, score: 10, skills: ["fastapi","pytorch","edge","MCP"], interests: ["agents","edge"], team: "AI/ML Pipeline", agents: 2 },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 3, score: 10, skills: ["react","nextjs","three.js"], interests: ["NLP","3D"], team: "3D & Visualization", agents: 1 },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 3, score: 9, skills: ["react","arduino","REST","A2A"], interests: ["digital-twin","IoT"], team: "Agent Builders", agents: 1 },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 3, score: 9, skills: ["python","tensorflow","RAG"], interests: ["healthcare"], team: "AI/ML Pipeline", agents: 1 },
+        { name: "Priya Sharma", github: "priya-dev", level: 3, score: 7, skills: ["python","pandas","flask","MCP"], interests: ["healthcare"], team: "Research & Content", agents: 1 },
+        { name: "Anam Singh", github: "anam-singh", level: 3, score: 7, skills: ["fastapi","YOLOv8","streamlit"], interests: ["agents","3D"], team: "Data & Knowledge", agents: 1 },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 3, score: 6, skills: ["python","NLP","streamlit","MCP"], interests: ["NLP"], team: "Research & Content", agents: 1 },
+        { name: "Deepanshu", github: "deepanshu99", level: 2, score: 4, skills: ["python","sql","powerbi"], interests: ["data"], team: "Data & Knowledge", agents: 0 },
+        { name: "Misha Arora", github: "misha-a", level: 2, score: 4, skills: ["python","pandas","R"], interests: ["data"], team: "Data & Knowledge", agents: 0 },
+        { name: "Harshit Kumar", github: "harshit-k", level: 2, score: 3, skills: ["react","javascript","node"], interests: ["agents"], team: "Research & Content", agents: 0 },
+        { name: "Joydeep Nandi", github: "joydeep-n", level: 2, score: 2, skills: ["python","pytorch","CV"], interests: ["3D"], team: "3D & Visualization", agents: 0 },
+    ],
+    month2: [
+        { name: "Yash Maheshwari", github: "yash-mahi", level: 3, score: 22, skills: ["fastapi","langchain","langgraph","MCP","A2A","security"], interests: ["agents","security"], team: "Agent Builders (Lead)", agents: 7 },
+        { name: "Siddhi Sahu", github: "siddhi-sahu", level: 3, score: 20, skills: ["python","tensorflow","RAG","MCP","crewai"], interests: ["agents"], team: "AI/ML Pipeline (Lead)", agents: 5 },
+        { name: "Anishaa Chaudhuri", github: "anishaa-c", level: 3, score: 19, skills: ["fastapi","supabase","XAI","MCP","A2A"], interests: ["agents","healthcare"], team: "Agent Builders", agents: 4 },
+        { name: "Faariyh Rizwan", github: "faariyh", level: 3, score: 18, skills: ["security","pentest","MCP","threat-model"], interests: ["security"], team: "QA & Security (Lead)", agents: 3 },
+        { name: "Touqeer Hamdani", github: "touqeer-h", level: 3, score: 17, skills: ["fastapi","pytorch","edge","MCP","MQTT"], interests: ["agents","edge"], team: "AI/ML Pipeline", agents: 4 },
+        { name: "Priya Sharma", github: "priya-dev", level: 3, score: 16, skills: ["python","flask","MCP","healthcare","SMILE"], interests: ["healthcare"], team: "Research & Content (Lead)", agents: 3 },
+        { name: "Suhani Sharma", github: "suhani-dev", level: 3, score: 15, skills: ["react","nextjs","three.js","WebGL"], interests: ["NLP","3D"], team: "3D & Visualization (Lead)", agents: 2 },
+        { name: "Anshumaan Singh", github: "anshumaan", level: 3, score: 14, skills: ["react","arduino","A2A","IoT","MCP"], interests: ["digital-twin","IoT"], team: "Agent Builders", agents: 3 },
+        { name: "Ananyaa M", github: "ananyaa-m", level: 3, score: 13, skills: ["python","tensorflow","RAG","embeddings"], interests: ["healthcare"], team: "AI/ML Pipeline", agents: 2 },
+        { name: "Anam Singh", github: "anam-singh", level: 3, score: 12, skills: ["fastapi","YOLOv8","neo4j","MCP"], interests: ["agents","3D"], team: "Data & Knowledge (Lead)", agents: 2 },
+        { name: "Lavanya Parashar", github: "lavanya-p", level: 3, score: 11, skills: ["python","NLP","SMILE","content"], interests: ["NLP"], team: "Research & Content", agents: 2 },
+        { name: "Deepanshu", github: "deepanshu99", level: 3, score: 9, skills: ["python","sql","powerbi","MCP"], interests: ["data"], team: "Data & Knowledge", agents: 1 },
+        { name: "Misha Arora", github: "misha-a", level: 3, score: 8, skills: ["python","pandas","R","analytics"], interests: ["data"], team: "Data & Knowledge", agents: 1 },
+        { name: "Harshit Kumar", github: "harshit-k", level: 3, score: 7, skills: ["react","javascript","MCP","node"], interests: ["agents"], team: "Agent Builders", agents: 1 },
+        { name: "Joydeep Nandi", github: "joydeep-n", level: 3, score: 6, skills: ["python","pytorch","CV","unreal"], interests: ["3D"], team: "3D & Visualization", agents: 1 },
+    ]
+};
+
+let currentTimeline = 'day1';
+let currentFilter = 'all';
+let searchQuery = '';
+
+function setTimeline(key) {
+    currentTimeline = key;
+    document.querySelectorAll('.timeline-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    render();
+}
+
+function filterLevel(level) {
+    currentFilter = level;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+    render();
+}
+
+function filterTable(query) {
+    searchQuery = query.toLowerCase();
+    render();
+}
+
+function render() {
+    let data = MOCK_DATA[currentTimeline] || [];
+
+    if (currentFilter !== 'all') {
+        data = data.filter(d => d.level === currentFilter);
+    }
+
+    if (searchQuery) {
+        data = data.filter(d =>
+            d.name.toLowerCase().includes(searchQuery) ||
+            d.skills.some(s => s.toLowerCase().includes(searchQuery)) ||
+            (d.team && d.team.toLowerCase().includes(searchQuery)) ||
+            (d.interests && d.interests.some(i => i.toLowerCase().includes(searchQuery)))
+        );
+    }
+
+    // Update stats
+    const all = MOCK_DATA[currentTimeline] || [];
+    document.getElementById('stat-total').textContent = all.length;
+    document.getElementById('stat-l1').textContent = all.filter(d => d.level >= 1).length;
+    document.getElementById('stat-l2').textContent = all.filter(d => d.level >= 2).length;
+    document.getElementById('stat-l3').textContent = all.filter(d => d.level >= 3).length;
+    document.getElementById('stat-agents').textContent = all.reduce((sum, d) => sum + (d.agents || 0), 0);
+
+    const tbody = document.getElementById('leaderboard-body');
+    if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:3rem;color:#4a5568">No contributors match your filter</td></tr>';
+        return;
+    }
+
+    const maxScore = Math.max(...data.map(d => d.score), 1);
+
+    tbody.innerHTML = data.map((d, i) => {
+        const rankClass = i < 3 ? `rank-${i+1}` : '';
+        const topClass = i < 3 ? 'top-3' : '';
+        const levelClass = `level-${d.level}`;
+        const scorePct = Math.round((d.score / maxScore) * 100);
+        const skillsHtml = d.skills.slice(0, 4).map(s => `<span class="skills-tag">${s}</span>`).join('');
+        const teamStr = d.team || '—';
+        const agentCount = d.agents ? ` (${d.agents} agents)` : '';
+
+        return `<tr class="${topClass} animate-in" style="animation-delay:${i * 0.03}s">
+            <td class="${rankClass}">${i + 1}</td>
+            <td><strong>${d.name}</strong></td>
+            <td><a href="https://github.com/${d.github}">${d.github}</a></td>
+            <td><span class="level-badge ${levelClass}">L${d.level}</span></td>
+            <td><span class="score-bar"><span class="fill" style="width:${scorePct}%"></span></span><span class="score-text">${d.score}${agentCount}</span></td>
+            <td>${skillsHtml}</td>
+            <td>${teamStr}</td>
+        </tr>`;
+    }).join('');
+}
+
+// Initial render
+render();
+</script>
 </body>
 </html>
